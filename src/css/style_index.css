@@ -1,0 +1,174 @@
+body {
+    min-height: 100vh;
+    overflow: hidden;
+    background-color: white;
+  }
+  header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    background: #e63946;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    border-radius: 10px;
+    z-index: 999;
+  }
+  
+  .navbar-links-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-links {
+    margin-right: 10px;
+    border: none;
+    background: none;
+    padding: 0;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    font-size: 26px;
+    cursor: pointer;
+    padding: 10px;
+    color: white;
+  }
+  
+  .title {
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    font-size: 26px;
+    margin-right: 30px;
+    color: white;
+  }
+  .interactive-background {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .row {
+    display: inline-flex;
+    margin-top: -32px;
+    margin-left: -30px;
+  }
+
+  .hex {
+    background-color: white;
+    position: relative;
+    width: 100px;
+    height: 110px;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    margin: 2px;
+    transition: 2s;
+  }
+
+  .light {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    width: 600px;
+    height: 500px;
+    background: #e63946;
+    border-radius: 60%;
+    transform: translate(-50%, -50%);
+    animation: anim 2s linear infinite;
+    transition: background-color 0.3s ease, filter 0.3s ease;
+    filter: blur(80px);
+    z-index: 1;
+  }
+
+.cursor-title {
+position: fixed;
+top: 40%;
+left: 50%;
+transform: translate(-50%, -50%);
+z-index: 4;
+pointer-events: none;
+text-align: center;
+}
+
+.cursor-title h1 {
+font-family: 'FV Almelo', sans-serif;
+font-size: 15vw; /* Taille de police en unité de viewport */
+color : #505D75;
+text-shadow: 0px 0px 10px black;
+}
+.graph-container{
+margin-top:30px;}
+
+  .cursor {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 150px;
+    height: 150px;
+    background: #e63946;
+    border-radius: 50%;
+    transform: translate(-30%, -50%);
+    animation: anim 2s linear infinite;
+          filter: blur(80px);
+
+    z-index: 1;
+  }
+
+.btn-container {
+    position: absolute;
+    top: 75%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .btn-column {
+    display: flex;
+    vertical-align: top;
+    width: 50%;
+    text-align: center;
+  }
+
+@media (max-width: 768px) {
+.btn-column {
+  width: 100%;
+}
+}
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.cdnfonts.com/css/fv-almelo');
+.button {
+  color:#fff;
+text-decoration: none;
+font-family: 'FV Almelo', sans-serif;
+ font-size: 4vw; /* Taille de police en unité de viewport */
+padding: 2vh 5vw; /* Rembourrage en unités de viewport */
+
+
+
+background-image: linear-gradient(to right, #3A1C71 0%, #D76D77  51%, #3A1C71  100%);
+margin: 10px;
+text-align: center;
+text-transform: uppercase;
+transition: 0.5s;
+background-size: 200% auto;
+color: #fff;
+  text-shadow: 0px 0px 50px black; ;
+box-shadow: 0px 0px 50px black;
+border-radius: 550px;
+display: block;
+text-decoration: none;
+}
+
+.button:hover {
+background-position: right center; /* change the direction of the change here */
+color: #fff;
+ box-shadow: 0 0 20px #eee;
+text-decoration: none;
+}
+
+
+
+

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Cophi</title>
+    <!-- css -->
+    <link href="/src/css/interface.css" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/fv-almelo" rel="stylesheet">
+    <!-- Ajout du module cophi -->
+    <script type="module">
+        import { main } from "../js/main.mjs";
+        document.getElementById("btn-load").addEventListener("click", () => {
+            main();
+        });
+    </script>
+
+    <script type='module' src="/../node_modules/file-saver/src/FileSaver.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+</head>
+
+<header>
+    <div class="navbar-links-container">
+      <button class="navbar-links" id="home-page" onclick="redirectToHomePage()">Home</button>
+      <button class="navbar-links" id="help-page" onclick="alert('insert help page here');">Help</button>
+    </div>
+    <div class="title">C.O.Ph.I</div>
+  </header>
+  
+
+<script>
+    function redirectToHomePage() {
+        window.location.href = "index.html";
+    }
+</script>
+
+
+<body>
+    <div class="grid-container">
+        <!-- tools content -->
+
+        <aside id="sidebar" class="sidebar-hidden">
+            <button id="toggleButton" class="circular-button">Show</button>
+            <h2>ToolBox</h2>
+            <div id="menu-icon">
+              <div class="menu-title">Scale</div>
+              <div class="submenu" id="sidebar-zoom"></div>
+              <div class="menu-title">Colors</div>
+              <div class="submenu" id="sidebar-style">
+                <div class="content-selector">
+                  <label for="content-selector-col-paths">Paths : </label>
+                  <select class="sel" id="content-selector-col-paths">
+                    <option value="Black">Black</option>
+                    <option value="Grey">Grey</option>
+                    <option value="Yellow">Yellow</option>
+                    <option value="Blue">Blue</option>
+                  </select>
+                </div>
+                <div class="content-selector">
+                  <label for="content-selector-col-nodes">Nodes : </label>
+                  <select class="sel" id="content-selector-col-nodes">
+                    <option value="option1">style1</option>
+                    <option value="option2">style2</option>
+                    <option value="option3">style3</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+              <div class="menu-title">Add Items</div>
+              <div class="submenu" id="sidebar-add"></div>
+            
+            </div>
+             
+              <div class="menu-title" id="sidebar-table">Data</div>
+              <button id="btn-table">Soon.</button>
+            </div>
+          </aside>
+          
+           <main>
+            <script>
+                const zoomElement = document.getElementById('sidebar-zoom');
+                const stylesElement = document.getElementById('sidebar-style');
+                const addElement = document.getElementById('sidebar-add');
+                const downloadElement = document.getElementById('sidebar-download');
+                const tableElement = document.getElementById('sidebar-table');
+                const tableButton = document.getElementById('btn-table');
+                const contentContainer = document.getElementById('content-container');
+
+
+            </script>
+            <div class="card">
+                <h3 class="card-title">Upload File(s)</h3>
+                <p class="card-description"></p>
+                <label for="files" class="file-label">
+                    <span class="file-icon"><i class="fas fa-upload"></i></span>
+                    <span class="file-text">Browse</span>
+                </label>
+                <input class="input-file" id="files" multiple="multiple" maxuploads="2"  name="file[]" type="file" required="required">
+                <div id="file-names"></div>
+                <button id="btn-load" class="submit-input" onclick="" type="submit">Load</button>
+            </div>
+            <div id="error-message" style="color: red;"></div>
+            <script>function getFiles() {
+
+
+                    var files = [];
+                    let size = document.getElementById('files').files.length;
+                    for (var index = 0; index < size; index++) {
+                        files.push(document.getElementById('files').files[index]);
+                    }
+
+
+
+                    console.log(files);
+                    new Reader(files);
+
+
+                }</script>
+            <!-- REMOVE BUTTON -->
+            <script>document.getElementById("files").addEventListener("change", function (event) {
+                    var fileNames = "";
+                    var filesContainer = document.getElementById("file-names");
+                    var files = Array.from(this.files).slice(0, 2); // Limit to maximum 4 files
+                    filesContainer.innerHTML = ""; // Clear previous files
+
+                    files.forEach(function (file) {
+                        var fileName = file.name;
+                        var fileEntry = document.createElement("div");
+                        fileEntry.classList.add("file-entry");
+
+                        var fileNameElement = document.createElement("span");
+                        fileNameElement.textContent = fileName;
+                        fileEntry.appendChild(fileNameElement);
+
+                        var deleteButton = document.createElement("button");
+                        deleteButton.textContent = "Delete";
+                        deleteButton.addEventListener("click", function () {
+                            filesContainer.removeChild(fileEntry);
+                        });
+                        fileEntry.appendChild(deleteButton);
+
+                        filesContainer.appendChild(fileEntry);
+                    });
+                });
+
+            </script>
+
+            <div id="graph-container"></div>
+
+        </main>
+
+        <div class="bottom" id="bottom">
+            <div id="tabs">
+              <ul class="tab-list"></ul>
+              <div class="tab-content"></div>
+          </div>
+
+        </div>
+        <script>
+            const sidebar = document.getElementById("sidebar");
+            const toggleButton = document.getElementById("toggleButton");
+
+toggleButton.addEventListener("click", function() {
+  toggleButton.classList.toggle("active");
+  toggleButton.textContent = toggleButton.classList.contains("active") ? "Hide" : "Show";
+});
+toggleButton.addEventListener("click", toggleSidebar);
+
+function toggleSidebar() {
+  sidebar.classList.toggle("sidebar-hidden");
+}
+          </script>
+          
+
+        
+       <script>const btnTable = document.getElementById("btn-table");
+            const bottom = document.getElementById("bottom");
+
+            btnTable.addEventListener("click", () => {
+                console.log("oui");
+                if (getComputedStyle(bottom).display === "none") {
+                    bottom.style.display = "block";
+                } else {
+                    bottom.style.display = "none";
+                }
+            });</script>
+
+        <script type="module" src="/src/js/Reader.mjs"></script>
+        <script type="module" src="/src/js/Data.mjs"></script>
+        <script type="module" src="/src/js/Chart.mjs"></script>
+ 
+        <script type="module" src="/src/js/event.mjs"></script>
+    </div>
+</body>
+
+</html>
+</script>
