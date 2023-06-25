@@ -1,30 +1,22 @@
-// import * as http from 'http';
-// import fs from 'fs';
 
-// const server = http.createServer((req, res) => {
-//   fs.readFile('./src/public/interface.html', (err, content) => {
-//     if (err) {
-//       res.writeHead(500, { 'Content-Type': 'text/plain' });
-//       res.end('Erreur du serveur');
-//     } else {
-//       res.setHeader('Content-Type', 'text/css');
-//       res.writeHead(200, { 'Content-Type': 'text/html' });
-//       res.end(content);
-//     }
-//   });
-// });
-
-// server.listen(3000, () => {
-//   console.log('Serveur en cours d\'exécution sur le port 3000');
-// });
-
+import path from 'path';
+import { fileURLToPath } from 'url';
 import express from 'express';
+
 const app = express();
+const port = 3000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ...
+app.use(express.static('src'));
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/src/public/index.html');
+  const indexPath = path.join(__dirname, 'src', 'public/interface.html');
+  res.sendFile(indexPath);
 });
 
-app.use(express.static('src'));
-app.listen(3000, () => {
-  console.log('Serveur en cours d\'exécution sur le port 3000');
+// ...
+
+app.listen(port, () => {
+  console.log('Serveur en cours d\'exécution sur le port 33400');
 });
