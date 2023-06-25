@@ -20,6 +20,10 @@
 
 import express from 'express';
 const app = express();
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/src/public/index.html');
+});
+
 app.use(express.static('src'));
 app.listen(3000, () => {
   console.log('Serveur en cours d\'exécution sur le port 3000');
