@@ -46,17 +46,13 @@ export class Data {
     return inputData;
   }
   
-  
-
-  
-      
+   
     initData(inputData) {
         console.log("[-- DATA INITIALIZATION --]");
-
+console.log(this.inputData)
         this.traiterParLot(inputData, 1000);
-        
+        console.log("inputdata : ", inputData);
        let newData =  this.addNullReaction(inputData,this.columns);
-
         let lines = newData;
         let keys = newData.columns.slice(0);
 

@@ -1,8 +1,8 @@
-
+//import { saveAs } from "./file-saver";
 export function test(svgElement) {
    
     const svgWidth = 7000;
-    const svgHeight = 700;
+    const svgHeight = 550;
     const canvas = document.createElement('canvas');
     canvas.width = svgWidth;
     canvas.height = svgHeight;

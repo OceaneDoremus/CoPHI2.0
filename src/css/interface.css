@@ -90,7 +90,7 @@ header {
 
 /* TOOLBOX CONTENT*/
 #sidebar {
-  background: #bdbbb6;
+  background:rgb(245, 239, 239);
   display: flex;
   flex-direction: column;
   margin-top: -20px;
@@ -125,14 +125,12 @@ header {
   
 }
 #subContainer button {
-  margin-left: 20px; 
-  align-self: flex-start; 
-  top: 50px;
+  top: -20px;
 position: relative;
 }
   #subContainer .label {
     position: relative;
-    bottom: -700px;
+    bottom: -290px;
     left: 20px;
   }
 
@@ -226,7 +224,7 @@ position: relative;
   max-width: 1000px;
   height: 400px;
   color: #505D75;
-  background-color: #e6e4e2;
+  background-color: rgb(245, 239, 239);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4), 0 6px 5px rgba(80, 93, 117, 0.6);
   display: flex;
   flex-direction: column;

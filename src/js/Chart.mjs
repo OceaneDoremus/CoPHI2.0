@@ -38,7 +38,7 @@ export class Chart {
       .attr('min', 1000)
       .attr('max', 6000)
       .attr('step', 500)
-      .attr('value', 6000)
+      .attr('value', 1000)
       .style('top', '20px')
       .style('left', '600px')
   }
@@ -83,14 +83,12 @@ export class Chart {
     /// // CONFIG ////
     const container = d3.select('#graph-container')
 
-  
-    
       const subContainer = container.append('div')
       .attr('class', this.container)
       .attr('id', 'subContainer')
 
       subContainer.append('text')
-      .attr('x', -630)
+      .attr('x', 80)
       .attr('y',-5)
       .attr('dy', '.55em')
       .attr('class', 'label')
@@ -108,8 +106,8 @@ const btnR = subContainer.append('button')
   .style('border', 'none')
   .append('svg')
   .attr('xmlns', 'http://www.w3.org/2000/svg')
-  .attr('width', '62')
-  .attr('height', '62')
+  .attr('width', '32')
+  .attr('height', '32')
   .attr('viewBox', '0 0 1024 1024');
 
 btnR.append('path')
@@ -127,8 +125,8 @@ btnR.on('mouseout', () => btnR.select('#svg-path').attr('fill', 'black'));
   .style('border','none')
   .append('svg')
     .attr('xmlns', 'http://www.w3.org/2000/svg')
-    .attr('width', '62')
-    .attr('height', '62')
+    .attr('width', '32')
+    .attr('height', '32')
     .attr('viewBox', '0 0 1024 1024');
 
 btnD.append('path')
@@ -155,9 +153,9 @@ btnD.on('click', function() {
       categories: 3,
       dimensions: Object.keys(this.data[0]),
       width: 7000,
-      height: 700,
+      height: 400,
       total: this.data.length,
-      nodeWidth: 27
+      nodeWidth: 10
     }
 
     // Call Plot
@@ -166,7 +164,7 @@ btnD.on('click', function() {
       .width(config.width)
       .height(config.height)
       .margin(config.margin)
-      .xScale((config.dimensions.length*60), config.dimensions)
+      .xScale((1000), config.dimensions)
       .colors(['#da1e37', '#006466', 'yellow'])
       .numberOfCategories(config.categories)
       .nodeWidth(config.nodeWidth)

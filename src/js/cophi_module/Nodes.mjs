@@ -6,6 +6,7 @@ export class Node {
         this.parentAxe = parentAxe.toString();
         this.children = [];
         this.count;
+        this.svgheight = 300;
         this.links = [];
         this.height = 28; // correspond a la taille du rect, min à 2
         this.position; // correspond au x
@@ -14,21 +15,30 @@ export class Node {
     addLinks(links) {
         this.links.push(links);
     }
+
     computePosition(height, category) {
-        if (category == 2 && height < 120) {
-            return 120 - (height);
-        } if (category == 1 && height < 120) {
-            return 260 - (height /2);
-        } if (category == 0) {
-            return 380;
-        } if (category == 2 && height >= 120) {
-            return 0;
-        } if (category == 1 && height >= 120) {
-            return 200;
+        let svgHeight = 300;
+
+        let max = svgHeight / 3;
+        let padding = 5;
+        let nodesize = max - padding;
+    
+        if (category === 0) {
+                return svgHeight - nodesize ; 
+        } else if (category === 1) {
+                return (svgHeight / 2)  - (height / 2) 
+        } else if (category === 2) {
+            if (height < nodesize) {
+                return padding + nodesize - height;
+            } else {
+                return 0;
+            }
         }
+            return 0;
     }
+    
     setHeightAndPosition(x, total) {
-        this.height = (110 * this.count / total) + 10;
+        this.height = ( this.count / total)*100; //taille en pourcentage
         this.position = x(this.parentAxe);
         this.yPos = [this.computePosition(this.height, this.value), this.computePosition(this.height, this.value) + this.height];
     }

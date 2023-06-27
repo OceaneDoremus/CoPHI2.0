@@ -20,7 +20,7 @@ export function Pcp() {
     let state = "middle"
     let paddingAxes = 28
     let scale
-    let opacity = { nodes: 1, paths: 1 }
+    let opacity = { nodes: 1, paths: 0.7 }
     // OTHERS ATTRIBUTES
     let pathColors = '#505D75'
     let data
@@ -62,8 +62,8 @@ export function Pcp() {
     function ribbonPathString(source, target, tension) {
         const sx = source.x + nodeWidth
         const tx = target.x
-        const sdy = source.weight < 15 ? 5 : source.weight
-        const tdy = target.weight < 15 ? 5 : target.weight
+        const sdy = source.weight //< 5 ? 5 : source.weight
+        const tdy = target.weight //< 5 ? 5 : target.weight
 
 
         return (tension === 1 ? `M${sx},${source.y0}L${tx},${target.y0}v${tdy}L${sx},${source.y0 + sdy}Z`
@@ -87,20 +87,25 @@ export function Pcp() {
         return allAxes
     }
     function setPosNode(height, category) {
-        if (category == 2 && height < 120) {
-            return 120 - (height);
-        } if (category == 1 && height < 120) {
-            return 260 - (height / 2);
-        } if (category == 0) {
-            return 380;
-        } if (category == 2 && height >= 120) {
-            return 0;
-        } if (category == 1 && height >= 120) {
-            return 200;
+        let svgHeight = 300;
+
+        let max = svgHeight / 3;
+        let padding = 5;
+        let nodesize = max - padding;
+    
+        if (category === 0) {
+                return svgHeight - nodesize ; 
+        } else if (category === 1) {
+                return (svgHeight / 2)  - (height / 2) 
+        } else if (category === 2) {
+            if (height < nodesize) {
+                return padding + nodesize - height;
+            } else {
+                return 0;
+            }
         }
-
+            return 0;
     }
-
     /**
     * For each dimension, create all corresponding nodes for an axis
      * @returns nodes, a list of Nodes Objects
@@ -161,8 +166,8 @@ export function Pcp() {
         })
 
         links.forEach(function (p) {
-            p.source.weight = (110 * p.source.count / total)
-            p.target.weight = (110 * p.target.count / total)
+            p.source.weight = (p.source.count / total)*100
+            p.target.weight = (p.target.count / total)*100
             p.source.y0 = setPosNode(p.source.weight, p.source.value)
             p.target.y0 = setPosNode(p.target.weight, p.target.value)
             p.source.y1 = p.source.y0 - p.source.weight
@@ -187,6 +192,7 @@ export function Pcp() {
                 .attr("id", d => d.source.name + "-" + d.source.value)
                 .attr("child", d => d.target.name + "-" + d.target.value)
                 .attr("fill", pathColors)
+                .attr('opacity',0.7)
 
         }
     }
@@ -288,7 +294,7 @@ export function Pcp() {
             .text(d => d.name.slice(0, 8))
             .style("font-size", 20 + "px")
             .style("transform", "rotate(-90deg)")
-            .attr("x", -height + 70) 
+            .attr("x", -height+40 ) 
             .attr("dy", 10) 
             .style("text-anchor", "start"); 
 
@@ -301,8 +307,8 @@ export function Pcp() {
 
             .attr("class", "checkbox-group")
             .append("circle")
-            .attr("r", 10)
-            .attr("cy", 650)
+            .attr("r", 8)
+            .attr("cy", height-30)
             .attr("width", 20)
             .attr("height", 20)
             .attr("fill", "#fff")
@@ -316,7 +322,7 @@ export function Pcp() {
                 d3.select(line)
                     .style("stroke-width", "20px")
                     .style("stroke", "purple")
-                    .style("stroke-opacity", 0.3)
+                    .style("stroke-opacity", 0.2)
             })
 
             .on("mouseout", function (event, d) {
@@ -423,26 +429,27 @@ export function Pcp() {
             .attr("id", d => d.source.name + "-" + d.source.value)
             .attr("child", d => d.target.name + "-" + d.target.value)
             .attr("fill", pathColors)
+            .attr('opacity',0.7)
         var rect = d3.selectAll(".rect-nodes").on("click", function (event, d) {
             var el = event.target.getAttribute("name")
             var g = event.target.getAttribute("graph")
             var current = currentElement(g,el)
             const child = findDescendants(g,el)
             const parents = findAncestors(g,el)
-            d3.selectAll("path")
-                .attr("opacity", 0.7)
+            // d3.selectAll("path")
+            //     .attr("opacity", 0.7)
 
             d3.selectAll(current)
                 .attr("fill", "#e63946")
-                .attr("opacity", 1)
+                .attr("opacity", 0.8)
 
             d3.selectAll(child)
                 .attr("fill", "#e63946")
-                .attr("opacity", 1)
+                .attr("opacity", 0.8)
 
             d3.selectAll(parents)
                 .attr("fill", "#e63946")
-                .attr("opacity", 1)
+                .attr("opacity", 0.8)
 
         })
     }
@@ -612,9 +619,9 @@ export function Pcp() {
       
     };
     function updatePathColors(selection) {
-        d3.selectAll("path").attr('opacity',1)
+        d3.selectAll("path").attr('opacity',0.7)
             .style("fill", function (d) { return pathColors })
-            .attr('opacity',1)
+            .attr('opacity',0.7)
    
     };
     pcp.reset = function () {
