@@ -1,7 +1,7 @@
 
-import path from 'path';
-import { fileURLToPath } from 'url';
-import express from 'express';
+import path from '/node_modules/path';
+import { fileURLToPath } from '/node_modules/url';
+import express from '/node_modules/express';
 
 const app = express();
 const port = 3000;
