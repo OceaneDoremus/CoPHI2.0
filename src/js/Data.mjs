@@ -53,6 +53,25 @@ console.log(this.inputData)
         this.traiterParLot(inputData, 1000);
         console.log("inputdata : ", inputData);
        let newData =  this.addNullReaction(inputData,this.columns);
+       console.log(newData,'DDDDDDDDDDDDDDDD')
+     // Étape 1: Tri des clés dans chaque objet JSON
+const sortedKeys = newData.columns.slice(0).sort();
+console.log(sortedKeys)
+// Étape 2: Création d'un tableau trié avec les objets JSON triés
+const sortedData = newData.map((obj) => {
+  const sortedObj = {};
+  sortedKeys.forEach((key) => {
+    sortedObj[key] = obj[key];
+  });
+  return sortedObj;
+});
+console.log(sortedData,'AAAAAAAAAAAA')
+
+// Étape 3: Enregistrement du JSON trié dans un fichier
+const sortedJsonString = JSON.stringify(sortedData);
+// Utilisez les fonctionnalités spécifiques à votre environnement ou framework pour enregistrer la chaîne `sortedJsonString` dans un fichier JSON
+console.log("Données triées : ", sortedJsonString);
+
         let lines = newData;
         let keys = newData.columns.slice(0);
 

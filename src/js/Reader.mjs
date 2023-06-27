@@ -48,6 +48,8 @@ export class Reader {
       parsedData.forEach((element) => {
         columnsList.push(element.columns);
       });
+      let jsonData = [];
+
     
       for (let i = 0; i < contents.length; i++) {
         let extraColumns = [];
@@ -56,6 +58,8 @@ export class Reader {
             extraColumns = extraColumns.concat(columnsList[j].filter(item => !columnsList[i].includes(item)));
           }
         }
+
+
         new Data(parsedData[i], `graph_${i}`, extraColumns);
       }
     }
