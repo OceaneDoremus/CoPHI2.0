@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 import { Pcp } from './cophi_module/fluxNetwork.mjs'
+import { DataTable } from './cophi_module/DataTable.mjs'
 import {test} from './event.mjs'
 
 export class Chart {

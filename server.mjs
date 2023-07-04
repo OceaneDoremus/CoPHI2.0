@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, 'src')));
 app.use(express.static(path.join(__dirname, 'nodes_modules')));
 app.get('/', (req, res) => {
-  const indexPath = path.join(__dirname+'/interface.html');
+  const indexPath = path.join(__dirname+'/src/public/interface.html');
   
   res.sendFile(indexPath);
 });
