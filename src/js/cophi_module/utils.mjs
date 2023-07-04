@@ -1,32 +1,40 @@
 
+
 /* eslint-disable no-undef */
-export function createTooltip (event, info) {
+export function createTooltip(event, info) {
   console.log('[ -- CREATE TOOLTIP --]')
   const tooltip = d3.select('body')
     .append('div')
     .attr('id', 'tooltip')
+    .classed('tooltip', true) // Ajoute la classe 'tooltip'
     .style('position', 'absolute')
     .style('left', event.pageX + 10 + 'px')
     .style('top', event.pageY + 10 + 'px')
+    .attr('white-space', 'pre-line')
     .style('display', 'block')
-    .style('background-color', 'bisque')
-    .style('border', '1px solid #ccc')
     .style('padding', '10px')
-  tooltip.html(info)
+  tooltip.html(info);
 }
+
 
 export function getPaths (s) {
   console.log(s)
-  const selection = d3.selectAll('.background path')//.attr('graph',s)//ajouter le graph0
+  const selection = d3.selectAll('.background path')
+
+  selection.nodes().filter(function(p) {
+    return d3.select(p).attr('graphPosition') === s;
+  });
+
   const filteredNodes = selection.nodes().filter(function(node) {
  
-    return d3.select(node).attr('graph') === s;
+  return d3.select(node).attr('graphPosition') === s;
   });
   
   return filteredNodes;
 }
 
 export function currentElement (selection,name) {
+  console.log(selection,name)
   const paths = getPaths(selection)
   return paths.filter(path => path.getAttribute('id') === name)
 }

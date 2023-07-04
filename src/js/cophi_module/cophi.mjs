@@ -1,31 +1,31 @@
 
 
-
 import { Axe } from "./Axe.mjs"
 import { Node } from "./Nodes.mjs"
 
+import { DataTable } from './DataTable.mjs';
 import { createTooltip, findDescendants, findAncestors, currentElement, getPaths } from "./utils.mjs"
 
 
-export function Pcp() {
+export function Plot() {
     // DEFAULT VALUE IF NOT SPECIFIED
     let container
     let xScale = 0
-    let height = 110
+    let height = 100
+    let minWidth = 1000
     let width = 400
     let margin = { top: 90, right: 10, bottom: 10, left: 10 }
     let numberOfCategories = 3
-    let nodeWidth = 150
-    let colors = ['#da1e37', '#3e1f47', '#0b525b']
+    let nodeWidth = 0
+    let colorsN = ['#da1e37', '#3e1f47', '#0b525b']
     let state = "middle"
     let paddingAxes = 28
-    let scale
-    let opacity = { nodes: 1, paths: 0.7 }
+    let opacity = { nodes: 1, paths: 1 }
     // OTHERS ATTRIBUTES
-    let pathColors = '#505D75'
+    let colorsP = ['#505D75','red']
     let data
-    let dimensions
-    let table
+    var dimensions
+
     let total
     let axes
     let nodes
@@ -36,8 +36,12 @@ export function Pcp() {
     let tableData
     let hiddenAxis = []
     let newAxes
+    let rect
+    let coloredPaths = [];
     let newDimension
     let allAxes = []
+    let table = [];
+
 
 
 
@@ -73,165 +77,220 @@ export function Pcp() {
      * For each dimension, create an axis and corresponding nodes
      * @returns allAxes, a list of Axis Objects
      */
-
-    function generateAxis() {
-
-        console.log("[-- START AXIS CREATION --]")
-
-        for (let i = 0; i < dimensions.length; i++) {
-            let ee = xScale(dimensions[i])
-            let axe = new Axe(dimensions[i], ee)
-            allAxes.push(axe)
-        }
-        console.log("[-- ALL AXES CREATEDD -- ] : ")
-        return allAxes
+    function createAxis() {
+     
+        return dimensions.map(item => {
+            let el = xScale(item);
+            return new Axe(item, el);
+          });
     }
-    function setPosNode(height, category) {
-        let svgHeight = 300;
-
+  
+   function setPosNode(height, category,i) {
+        let svgHeight = 400;
         let max = svgHeight / 3;
         let padding = 5;
         let nodesize = max - padding;
-    
+      let graphPadding = 400*i
         if (category === 0) {
-                return svgHeight - nodesize ; 
+          return svgHeight - nodesize +graphPadding;
         } else if (category === 1) {
-                return (svgHeight / 2)  - (height / 2) 
+          return (svgHeight / 2) - (height / 2)+graphPadding;
         } else if (category === 2) {
-            if (height < nodesize) {
-                return padding + nodesize - height;
-            } else {
-                return 0;
-            }
-        }
+          if (height < nodesize) {
+            return padding + nodesize - height +graphPadding;
+          } else {
             return 0;
-    }
+          }
+        }
+      
+        return 0;
+      }
+    
+      
     /**
     * For each dimension, create all corresponding nodes for an axis
      * @returns nodes, a list of Nodes Objects
      */
 
-    function generateNodes(axes) {
-let total = data.data.length;
-const nodes = dimensions.flatMap(dim => {
-            const counts = d3.rollup(data.data, v => v.length, d => d[dim])
+    function createNodes(axes) {
+var nodes ;
+data.forEach((element,i) => {
+
+ nodes = dimensions.flatMap(dim => {
+            const counts = d3.rollup(element, v => v.length, d => d[dim])
             return Array.from(counts, ([value, count]) => ({
                 id: `${dim}-${value}`,
                 parentAxe: dim,
                 dim,
                 value,
-                count
+                count,
+                file :element.length,
             }))
         }).map(nodeData => {
-            const node = new Node(nodeData.id, nodeData, nodeData.parentAxe)
+            const node = new Node(nodeData.id, nodeData, nodeData.parentAxe,i)
             node.count = nodeData.count
-            node.setHeightAndPosition(xScale, total)
+            node.setHeightAndPosition(xScale, element.length)
             return node
         })
-
         nodes.forEach(node => {
             const parentAxe = axes.find(axe => axe.name === node.parentAxe)
             parentAxe.addNodes(node)
-        })
-        return nodes
-    }
+        })  
+    })
+return nodes}
+function generatePaths(data) {
+    let alllinks = [];
 
-    function generatePaths() {
-
-        let links = []
-
-       let  total = data.data.length
-
-        data.data.forEach(function (d, i) {
-            console.log(d)
-            let pairs = d3.pairs(dimensions)
-            pairs.forEach(function (p) {
-                console.log(p[0], d[p[0]])
-                let codeS = p[0] + "-" + d[p[0]] ;
-               let codeT =  p[1] + "-" + d[p[1]];
-                let source = { name: p[0], value: d[p[0]], x: xScale(p[0]), count: 1 }
-                let target = { name: p[1], value: d[p[1]], x: xScale(p[1]), count: 1 }
-                let link = { graph:0,codeS: codeS,codeT:codeT, source: source, target: target }
-                let foundLink = links.find(function (l) {
-                    return l.source.name === source.name && l.target.name === target.name && l.source.value === source.value && l.target.value === target.value
-                })
-                if (foundLink) {
-                    foundLink.source.count++
-                    foundLink.target.count++
-                } else {
-                    links.push(link)
-                }
-            })
-        })
-
-        links.forEach(function (p) {
-            p.source.weight = (p.source.count / total)*100
-            p.target.weight = (p.target.count / total)*100
-            p.source.y0 = setPosNode(p.source.weight, p.source.value)
-            p.target.y0 = setPosNode(p.target.weight, p.target.value)
-            p.source.y1 = p.source.y0 - p.source.weight
-            p.target.y1 = p.target.y0 - p.target.weight
-
-        })
-        console.log(links)
-        return links
-    }
+    data.forEach(function (d, i) {
+      let links = [];
+      d.forEach(function (e, j) {
+        let pairs = d3.pairs(dimensions);
+  
+        pairs.forEach(function (p) {
+          let codeS = p[0] + "-" + e[p[0]];
+          let codeT = p[1] + "-" + e[p[1]];
+          let source = { name: p[0], value: e[p[0]], x: xScale(p[0]), count: 1 };
+          let target = { name: p[1], value: e[p[1]], x: xScale(p[1]), count: 1 };
+          let link = {
+            graph: i,
+            codeS: codeS,
+            codeT: codeT,
+            source: source,
+            target: target
+          };
+          let foundLink = links.find(function (l) {
+            return (
+              l.source.name === source.name &&
+              l.target.name === target.name &&
+              l.source.value === source.value &&
+              l.target.value === target.value
+            );
+          });
+          if (foundLink) {
+            foundLink.source.count++;
+            foundLink.target.count++;
+          } else {
+            links.push(link);
+          }
+        });
+      });
+  
+      let total = d.length;
+  
+      links.forEach(function (p) {
+        p.source.weight = (p.source.count / total) * 100;
+        p.target.weight = (p.target.count / total) * 100;
+        p.source.y0 = setPosNode(p.source.weight, p.source.value, i);
+        p.target.y0 = setPosNode(p.target.weight, p.target.value, i);
+        p.source.y1 = p.source.y0 - p.source.weight;
+        p.target.y1 = p.target.y0 - p.target.weight;
+      });
+  
+      alllinks.push(links);
+    });
+    
+  console.log(alllinks)
+    return alllinks;
+  }
+  
 
     function updateLinks(svg, selection) {
-        if (getState !== "min") {
-            var lines = generatePaths()
-            svg.append("g")
-                .attr("class", "background")
-                .attr("graph", selection.attr("class"))
-                .selectAll("path")
-                .data(lines)
-                .enter().append("path")
-                .attr("graph", selection.attr("class"))
-                .attr("d", d => ribbonPathString(d.source, d.target, 0.5))
-
-                .attr("id", d => d.source.name + "-" + d.source.value)
-                .attr("child", d => d.target.name + "-" + d.target.value)
-                .attr("fill", pathColors)
-                .attr('opacity',0.7)
-
-        }
+        var lines = generatePaths(data);
+        lines.forEach(function (i) {
+            const background = svg.append("g")
+              .attr("class", "background")
+              .selectAll("path")
+              .data(i)
+              .enter()
+              .append("path")
+              .attr('graphPosition',d=> d.graph)
+              .attr("id", d => d.source.name + "-" + d.source.value)
+              .attr("child", d => d.target.name + "-" + d.target.value)
+              .attr("fill", colorsP[0])
+              .attr('opacity', 1)
+              .attr("d", d => ribbonPathString(d.source, d.target, 0.5));
+          });
+            
     }
-    function generateTable(axes){
-;
-
-    }
+    function initTable(data) {
+        let table =[]
+        data.forEach((element,i) => {
+          let current = new DataTable(element,data[0].columns.sort(),i);
+          current.createTable();
+          table.push(current)
+        });
+        // default first table active
+        const activeTab = d3.select("#tab-0");
+        activeTab.classed("active", true);
+        d3.select(".tab-contents #tab-0").classed("active", true);
+        
+    return table;
+      }
+    
 
 
     function pcp(selection) {
-        axes = generateAxis(data.data)
-        nodes = generateNodes(axes)
-        lines = generatePaths()
-        updateNodesColors(colors)
-        updatePathColors(pathColors)
-        updateOpacity(opacity)
-
-        total = data.data.length
-
-        console.log("[-- START MODULE  --]")
+  
+        axes = createAxis();
+        nodes = createNodes(axes);
+        lines = generatePaths(data);
+        table = initTable(data);
 
         // render
         const svg = selection.append('svg')
             .attr('id', 'svg_container')
-            .attr("graph", selection.attr("class"))
-            .attr('width', width)
-            .attr('height', height)
+            .attr('width', d => (width < minWidth) ? minWidth : width)
+            .attr('height',  height)
             .attr('margin-top', margin.top)
 
         // Add axes
         const allAxes = svg.selectAll(".axes")
             .data(axes)
             .enter().append("g")
-            .attr("graph", selection.attr("class"))
             .attr("name", d => d.name)
+            
             .attr("fill", "black")
-            .attr("width", "15")
+            .attr("width", "10")
             .attr("class", "axis")
             .attr("transform", function (d) { return "translate(" + xScale(d.name) + ")" })
+        
+            // Add lines for each axis
+        
+        const axesLine = allAxes.append("line")
+        .attr("x1", 5)
+        .attr("y1", 0)
+        .attr("x2", 5)
+        .attr("y2", height-100)
+        .attr("stroke", "lightgrey")
+        .attr("stroke-width", "1")
+
+// Add axis label
+const axesLabel = allAxes
+.append("text")
+.attr("class", "labels")
+.text(d => d.name.slice(0, 8))
+.style("font-size", 20 + "px")
+.style("transform", "rotate(-90deg)")
+.attr("x", -height+50 ) 
+.attr("dy", 10) 
+.style("text-anchor", "start"); 
+ // Add the paths
+ lines.forEach(function (i) {
+    const background = svg.append("g")
+      .attr("class", "background")
+      .selectAll("path")
+      .data(i)
+      .enter()
+      .append("path")
+      .attr("graph", selection.attr("class"))
+      .attr("id", d => d.source.name + "-" + d.source.value)
+      .attr("child", d => d.target.name + "-" + d.target.value)
+      .attr("fill", colorsP[0])
+      .attr('opacity', 1)
+      .attr("d", d => ribbonPathString(d.source, d.target, 0.5));
+  });
+  
+        
         const dragging = {}
         allAxes.call(d3.drag()
             .on("start", dragStart)
@@ -260,13 +319,13 @@ const nodes = dimensions.flatMap(dim => {
             delete dragging[d.name]
             d3.select(this).classed("active", false)
             allAxes.attr("transform", d => `translate(${position(d.name)})`)
-            if (getState() == "max" || getState() == "middle") {
-
-                updateLinks(svg, selection)
-            }
-            if (tableData) {
-                // table.reorder(dimensions);
-            }
+            
+            d3.selectAll(".background").remove()
+            console.log("dim drag",dimensions)
+            updateLinks(svg, selection)
+            table.forEach((element,i) =>  element.reorder(dimensions))
+            
+        
 
         }
 
@@ -275,36 +334,12 @@ const nodes = dimensions.flatMap(dim => {
             return v == null ? xScale(d) : v
         }
 
-        // Add lines for each axis
-        const axesLine = allAxes.append("line")
-            .attr("graph", selection.attr("class"))
-            .attr("x1", 10)
-            .attr("y1", 0)
-            .attr("x2", 10)
-            .attr("y2", 500)
-            .attr("stroke", "grey")
-            .attr("stroke-width", "1")
-            .attr("opacity", 0.2)
-
-        // Add axis label
-        const axesLabel = allAxes
-            .attr("graph", selection.attr("class"))
-            .append("text")
-            .attr("class", "labels")
-            .text(d => d.name.slice(0, 8))
-            .style("font-size", 20 + "px")
-            .style("transform", "rotate(-90deg)")
-            .attr("x", -height+40 ) 
-            .attr("dy", 10) 
-            .style("text-anchor", "start"); 
-
-
         // Add remove button 
         ////////////////// BOX AXES //////////////////
         // // ADD checkBox for each axis
+
         const checkboxGroup = allAxes.append("g")
             .attr("id", selection.attr("class"))
-
             .attr("class", "checkbox-group")
             .append("circle")
             .attr("r", 8)
@@ -315,51 +350,33 @@ const nodes = dimensions.flatMap(dim => {
             .attr("stroke", "#000")
             .attr("stroke-width", 1)
             .on("mouseover", function (event, d) {
-                const axis = d3.selectAll(".axis").filter(axis => axis.name === d.name).node()
-                const child = axis.children
-                const line = child[0]
-
-                d3.select(line)
-                    .style("stroke-width", "20px")
-                    .style("stroke", "purple")
-                    .style("stroke-opacity", 0.2)
+                const axis = d3.selectAll(".axis").filter(axis => axis.name === d.name).selectAll("*");
+                axis.attr("opacity", 0.5)
+                
             })
-
             .on("mouseout", function (event, d) {
-
-                const axis = d3.selectAll(".axis").filter(axis => axis.name === d.name).node()
-                const child = axis.children
-                const line = child[0]
-                d3.select(line)
-                    .style("stroke-width", null)
-                    .style("stroke", null)
+                const axis = d3.selectAll(".axis").filter(axis => axis.name === d.name).selectAll("*");
+                axis.attr("opacity", 1);
             })
-        checkboxGroup
             .on("click", function (event, d) {
                 const elementIndex = dimensions.findIndex(element => element === d.name)
                 let currentEl = d3.selectAll('.axis')
                     .filter(function () {
-                        return d3.select(this).attr('name') == d.name && d3.select(this).attr('graph') == selection.attr('class')
+                        return d3.select(this).attr('name') == d.name 
                     })
-                currentEl.attr("visibility", "hidden")
-
-
+                currentEl.attr("visibility", "hidden");
                 let newAxes = axes.splice(axes.findIndex(axe => axe.name == d.name), 1)
-                const removeElement = d3.selectAll(".background").filter(function () {
-                    return this.getAttribute("graph") === selection.attr("class")
-                })
-
-
+                const removeElement = d3.selectAll(".background")
                 removeElement.remove()
-                xScale.domain(axes.map(axe => axe.name))
+                xScale.domain(dimensions.filter(dim => dim != d.name))
+                console.log(xScale.domain())
                 dimensions = dimensions.filter(dim => dim != d.name)
-                xScale.domain(dimensions)
+                    console.log("dimension apres lcick",dimensions)
                 addRemoved(d)
-
-                if (getState() != "min") {
-                    updateLinks(svg, selection)
-                }
-
+                updateLinks(svg, selection)
+                  table.forEach((dataTable) => {
+          dataTable.remove(d.name);
+        });
             })
         // GRADIENTS
         function createLinearGradient(id, x1, y1, x2, y2, startColor, endColor) {
@@ -390,13 +407,13 @@ const nodes = dimensions.flatMap(dim => {
         }
         // Add for each axis the nodes
         allAxes.each(function (axis) {
-            var rect = d3.select(this).selectAll("rect")
-                .attr("graph", selection.attr("class"))
-
+             rect = d3.select(this).selectAll("rect")
                 .data(axis.nodes)
                 .enter().append("rect")
                 .attr("class", "rect-nodes")
-                .attr("graph", selection.attr("class"))
+    
+                .attr("graphPosition",d=> d.graphPosition)
+                .attr("parent", d => d.parentAxe)
                 .attr("name", d => d.name)
                 .attr('title', d => "name : " + d.name + " count :  " + d.count)
                 .attr("width", nodeWidth)
@@ -405,99 +422,68 @@ const nodes = dimensions.flatMap(dim => {
                 .attr("category", d => "category" + d.value)
                 .attr("fill", d => "url(#" + gradients["gradient" + d.value].attr("id") + ")")                           
                 .on("mouseover", function (event, d) {
-                    let info = "Node : " + d.name + "\nCount : " + d.count
-
-                    showTip(event, info)
-                })
+       
+                    let info = "<strong>Name</strong> : " + d.name + "<strong><br>Count </strong>: "+ d.count + "<strong><br>Percentage</strong> : " +d.percentage+" %"+ "<strong><br>Category</strong> : " + d.value  + "<strong><br>Axe</strong> : " + d.parentAxe + "<strong><br>File</strong> : " + (d.graphPosition+1);
+                    showTip(event, info);
+                    d3.selectAll(".rect-nodes")
+                      .filter((_, i, nodes) => d3.select(nodes[i]).attr("parent") === d.parentAxe)
+                      .attr("opacity", 0.5);
+                  })
                 .on("mouseout", function () {
-                    hideTip()
-                })
-
+                    hideTip();
+                    d3.selectAll(".rect-nodes")
+                    .attr("opacity", 1);
+                })   
+              
         })
-
-        // Add the paths
-
-        background = svg.append("g")
-            .attr("graph", selection.attr("class"))
-
-            .attr("class", "background")
-            .selectAll("path")
-            .data(lines)
-            .enter().append("path")
-            .attr("graph", selection.attr("class"))
-            .attr("d", d => ribbonPathString(d.source, d.target, 0.5))
-            .attr("id", d => d.source.name + "-" + d.source.value)
-            .attr("child", d => d.target.name + "-" + d.target.value)
-            .attr("fill", pathColors)
-            .attr('opacity',0.7)
-        var rect = d3.selectAll(".rect-nodes").on("click", function (event, d) {
-            var el = event.target.getAttribute("name")
-            var g = event.target.getAttribute("graph")
-            var current = currentElement(g,el)
-            const child = findDescendants(g,el)
-            const parents = findAncestors(g,el)
-            // d3.selectAll("path")
-            //     .attr("opacity", 0.7)
-
-            d3.selectAll(current)
-                .attr("fill", "#e63946")
-                .attr("opacity", 0.8)
-
-            d3.selectAll(child)
-                .attr("fill", "#e63946")
-                .attr("opacity", 0.8)
-
-            d3.selectAll(parents)
-                .attr("fill", "#e63946")
-                .attr("opacity", 0.8)
-
-        })
-    }
-    pcp.rescale = function (value, el,selection) {
+        rect = d3.selectAll(".rect-nodes").on("click", function (event, d) {
+            event.stopImmediatePropagation();
+                        var el = event.target.getAttribute("name");
+            var g = event.target.getAttribute("graphPosition");
+            const current = currentElement(g, el);
+            const child = findDescendants(g, el);
+            const parents = findAncestors(g, el);
+            coloredPaths = coloredPaths.concat(current, child, parents);
+            
+       
+            d3.selectAll(coloredPaths)
+                .attr("fill", colorsP[1])
+                .attr("opacity", 0.8);
+        });
         
-        const g = el
-        const removeElement = d3.selectAll(".background").filter(function () {
-            return this.getAttribute("graph") === g
-        })
-        removeElement.attr("visibility", "hidden")
-        xScale.range([0, value])
-        let svg = d3.selectAll('svg#svg_container').filter(function () {
-            return this.getAttribute("graph") === g
-        })
-        updateLinks(svg,selection)
+        
+    }        
+    
+    
+    pcp.render = function (v, selection) {
+       dimensions.push(v.name);
+console.log("render dim",+dimensions)
+        xScale 
+            .domain(dimensions);
+        axes.push(v);
+        var filteredElements = d3.selectAll('g.axis[name="' + v.name + '"]').attr('visibility', 'visible');
+        const removeElement = d3.selectAll(".background").remove()
+       // removeElement.attr("visibility", "hidden")
+        let svg = d3.selectAll('svg#svg_container')
+        updateLinks(svg,this.selection);
+        pcp.transition(selection);
+        table.forEach((element,i) =>  element.add(v.name))
+
+
+    }
+    pcp.rescale = function (value,el) {
+
+        const removeElement = d3.selectAll(".background").attr("visibility", "hidden")
+        xScale.range([0, value]).domain(dimensions)
+        let svg = d3.selectAll('svg#svg_container').attr('width', value);
+        updateLinks(svg,el)
         pcp.transition(el)
     };
-
-    pcp.render = function (v, selection) {
-        const currentselection =selection.node().className;
-        this.dimensions().push(v.name)
-
-        xScale
-            .domain(dimensions)
-        axes.push(v)
-        var filteredElements = d3.selectAll('g.axis[name="' + v.name + '"]').attr('visibility', 'visible');
-        const removeElement = d3.selectAll(".background").filter(function () {
-            return this.getAttribute("graph") === currentselection
-        })
-        removeElement.attr("visibility", "hidden")
-        let svg = d3.selectAll('svg#svg_container').filter(function () {
-            return this.getAttribute("graph") === currentselection
-        });
-      
-
-        updateLinks(svg,selection);
-        pcp.transition(currentselection);
-
-    }
     pcp.transition = function (selection) {
 
-        const ax = d3.selectAll(".axis").filter(function () {
-            return this.getAttribute("graph") === selection
-        })
+        const ax = d3.selectAll(".axis")
         ax.attr("transform", function (d) { return "translate(" + xScale(d.name) + ")" })
-        const paths = d3.selectAll("path").filter(function () {
-            return this.getAttribute("graph") === selection
-        })
+         const paths = d3.selectAll("path").attr("transform", function (d) { return "translate(" + xScale(d.name) + ")" })
         return pcp
     }
     pcp.container = function (value) {
@@ -549,11 +535,11 @@ const nodes = dimensions.flatMap(dim => {
         return pcp
     };
 
-    pcp.colors = function (value) {
-        if (!arguments.length) return colors
-        colors = value
-
-        return pcp
+    pcp.colorsN = function (value) {
+        if (!arguments.length) return colorsN;
+        colorsN = value;
+        updateNodesColors();
+        return pcp;
     };
     pcp.data = function (value) {
         if (!arguments.length) return data
@@ -591,9 +577,10 @@ const nodes = dimensions.flatMap(dim => {
         return pcp
     };
 
-    pcp.pathColors = function (value) {
-        if (!arguments.length) return pathColors
-        pathColors = value
+    pcp.colorsP = function (value) {
+        if (!arguments.length) return colorsP;
+        colorsP = value;
+        updatePathsColors();
         return pcp
     };
     pcp.newAxes = function (value) {
@@ -604,6 +591,9 @@ const nodes = dimensions.flatMap(dim => {
     function updateData(selection) {
         d3.selectAll(".rect-nodes")
     };
+    function getDimensions(){
+        return dimensions;
+    }
 
     function updateOpacity(selection) {
         d3.selectAll(".rect-nodes")
@@ -611,16 +601,16 @@ const nodes = dimensions.flatMap(dim => {
         d3.selectAll("path")
             .style("opacity", opacity.paths)
     };
-    function updateNodesColors(selection) {
+    function updateNodesColors() {
         d3.selectAll(".rect-nodes")
-            .style("fill", function (d) { return colors[d.value] })
+            .style("fill", function (d) { return colorsN[d.value] })
             .attr('opacity',1)
       
     };
-    function updatePathColors(selection) {
-        d3.selectAll("path").attr('opacity',0.7)
-            .style("fill", function (d) { return pathColors })
-            .attr('opacity',0.7)
+    function updatePathsColors() {
+        d3.selectAll("path")
+            .style("fill", function (d) { return colorsP[0] })
+
    
     };
     pcp.reset = function () {

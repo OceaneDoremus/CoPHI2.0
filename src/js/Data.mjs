@@ -25,57 +25,58 @@ export class Data {
 
             }
             }
-          console.log('lot : ', i + 1, ':', lot);
         }
   }
-  addNullReaction(inputData, newCol) {
- 
-    
-    var newArr = [];
-    
-    if (newCol.length) {
+  addNullReaction(inputData, newCols) {
+    if (newCols.length) {
+      const existingColumns = Object.keys(inputData[0]);
+  
+      const uniqueNewCols = newCols.filter(col => !existingColumns.includes(col));
+  
       inputData.forEach(function(obj) {
-        newCol.forEach(function (e){
-          obj[e] = 0;
-        })
-       
-    });
-
+        uniqueNewCols.forEach(function(col) {
+          obj[col] = 0;
+        });
+      });
+  
+      const updatedColumns = [...existingColumns, ...uniqueNewCols];
+  
+      inputData.columns = updatedColumns;
     }
-
+  
     return inputData;
   }
   
+  
+  
+  sortColumns(el){
+
+const columns = el.columns;
+const sortedColumns = columns.slice().sort();
+const sortedElement = el.slice().sort((a, b) => {
+for (const col of sortedColumns) {
+  if (a[col] !== b[col]) {
+    return a[col] < b[col] ? -1 : 1;
+  }
+}
+return 0;
+});
+
+const result = {
+data: sortedElement,
+columns: sortedColumns
+};
+
+return result;  }
+  
    
     initData(inputData) {
-        console.log("[-- DATA INITIALIZATION --]");
-console.log(this.inputData)
+
         this.traiterParLot(inputData, 1000);
-        console.log("inputdata : ", inputData);
        let newData =  this.addNullReaction(inputData,this.columns);
-       console.log(newData,'DDDDDDDDDDDDDDDD')
-     // Étape 1: Tri des clés dans chaque objet JSON
-const sortedKeys = newData.columns.slice(0).sort();
-console.log(sortedKeys)
-// Étape 2: Création d'un tableau trié avec les objets JSON triés
-const sortedData = newData.map((obj) => {
-  const sortedObj = {};
-  sortedKeys.forEach((key) => {
-    sortedObj[key] = obj[key];
-  });
-  return sortedObj;
-});
-console.log(sortedData,'AAAAAAAAAAAA')
-
-// Étape 3: Enregistrement du JSON trié dans un fichier
-const sortedJsonString = JSON.stringify(sortedData);
-// Utilisez les fonctionnalités spécifiques à votre environnement ou framework pour enregistrer la chaîne `sortedJsonString` dans un fichier JSON
-console.log("Données triées : ", sortedJsonString);
-
-        let lines = newData;
-        let keys = newData.columns.slice(0);
-
-       let chart = new Chart(this.container,newData, lines, keys);
+        let d = this.sortColumns(newData);
+        let lines = d;
+        let keys = d.columns
+       //let chart = new Chart(this.container,d.data, lines, keys);
     }
-
 }

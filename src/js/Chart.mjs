@@ -1,12 +1,13 @@
 /* eslint-disable no-undef */
 import { Pcp } from './cophi_module/fluxNetwork.mjs'
 import {test} from './event.mjs'
+
 export class Chart {
   constructor(container, order, data, lines, key) {
     this.container = container
     this.data = data
     this.lines = lines
-    this.keys = key
+    this.keys = data.columns
     this.order = order
     this.hiddenElement = []
     this.addBox()
@@ -150,8 +151,8 @@ btnD.on('click', function() {
     const config = {
       container: subContainer,
       margin: { top: 20, right: 20, bottom: 30, left: 40 },
-      categories: 3,
-      dimensions: Object.keys(this.data[0]),
+      categories: 3*this.data.length,
+      dimensions: this.keys,
       width: 7000,
       height: 400,
       total: this.data.length,
@@ -202,7 +203,7 @@ btnD.on('click', function() {
      let col;
       const cont = this.container;
 
-      if (selectedValue === 'Black') {
+      if (selectedValue === 'opt1') {
         col = 'black'
       } else if (selectedValue === 'Grey') {
         col = 'grey'
@@ -239,8 +240,6 @@ btnD.on('click', function() {
       this.addObjet(d)
       plot.transition(containerValue)
     })
-
-
   }
   addElementListener(plot, container) {
 
