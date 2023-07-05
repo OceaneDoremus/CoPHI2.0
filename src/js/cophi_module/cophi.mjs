@@ -4,7 +4,7 @@ import { Axe } from "./Axe.mjs"
 import { Node } from "./Nodes.mjs"
 
 import { DataTable } from './DataTable.mjs';
-import { createTooltip, findDescendants, findAncestors, currentElement, getPaths } from "./utils.mjs"
+import { createTooltip, findDescendants, findAncestors, currentElement} from "./utils.mjs"
 
 
 export function Plot() {
@@ -23,7 +23,7 @@ export function Plot() {
     let opacity = { nodes: 1, paths: 1 }
     // OTHERS ATTRIBUTES
     let colorsP = ['#505D75','red']
-    let data
+    let data = [[]]
     var dimensions
 
     let total
@@ -113,6 +113,8 @@ export function Plot() {
      */
 
     function createNodes(axes) {
+
+        console.log("les données : ",data)
 var nodes ;
 data.forEach((element,i) => {
 
@@ -189,7 +191,6 @@ function generatePaths(data) {
       alllinks.push(links);
     });
     
-  console.log(alllinks)
     return alllinks;
   }
   
@@ -316,12 +317,12 @@ const axesLabel = allAxes
 
 
         function dragEnd(event, d) {
+                      
             delete dragging[d.name]
             d3.select(this).classed("active", false)
             allAxes.attr("transform", d => `translate(${position(d.name)})`)
             
             d3.selectAll(".background").remove()
-            console.log("dim drag",dimensions)
             updateLinks(svg, selection)
             table.forEach((element,i) =>  element.reorder(dimensions))
             
@@ -369,9 +370,7 @@ const axesLabel = allAxes
                 const removeElement = d3.selectAll(".background")
                 removeElement.remove()
                 xScale.domain(dimensions.filter(dim => dim != d.name))
-                console.log(xScale.domain())
                 dimensions = dimensions.filter(dim => dim != d.name)
-                    console.log("dimension apres lcick",dimensions)
                 addRemoved(d)
                 updateLinks(svg, selection)
                   table.forEach((dataTable) => {
@@ -440,24 +439,27 @@ const axesLabel = allAxes
             event.stopImmediatePropagation();
                         var el = event.target.getAttribute("name");
             var g = event.target.getAttribute("graphPosition");
+            let graph = [];
             const current = currentElement(g, el);
-            const child = findDescendants(g, el);
-            const parents = findAncestors(g, el);
-            coloredPaths = coloredPaths.concat(current, child, parents);
-            
-       
-            d3.selectAll(coloredPaths)
-                .attr("fill", colorsP[1])
-                .attr("opacity", 0.8);
+            current.forEach(path => {
+                graph.push(path.getAttribute('graphPosition'))
+              })
+
+              const child = findDescendants(g, el)
+            const childFilter = child.filter(el => graph.includes(el.getAttribute('graphPosition')));
+const parents = findAncestors(g, el)
+const parentsFilter = parents.filter(el => graph.includes(el.getAttribute('graphPosition')));
+              coloredPaths = coloredPaths.concat(current, childFilter, parentsFilter);
+              d3.selectAll(coloredPaths)
+                .attr("fill", colorsP[1]);
         });
-        
-        
     }        
     
     
     pcp.render = function (v, selection) {
-       dimensions.push(v.name);
-console.log("render dim",+dimensions)
+        if (!dimensions.includes(v.name)) {
+            dimensions.push(v.name);
+          }
         xScale 
             .domain(dimensions);
         axes.push(v);

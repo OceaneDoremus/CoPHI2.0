@@ -15,6 +15,8 @@
             main();
         });
     </script>
+  
+
     <script type ='module' src="/CoPHI2.0/server.mjs"></script>
     <script type='module' src="/../node_modules/file-saver/src/FileSaver.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -55,7 +57,7 @@
             <div class="submenu" id="sidebar-style">
               <div class="content-selector">
                 <label for="content-selector-col-paths">Paths : </label>
-                <select class="sel" id="content-selector-col-paths">
+                <select class="select" id="content-selector-col-paths">
                   <option value="opt1">Grey Level</option>
                   <option value="opt2">Grey/Yellow</option>
                   <option value="opt3">Blue/Red</option>
@@ -63,7 +65,7 @@
               </div>
               <div class="content-selector">
                 <label for="content-selector-col-nodes">Nodes : </label>
-                <select class="sel" id="content-selector-col-nodes">
+                <select class="select" id="content-selector-col-nodes">
                   <option value="opt1">Default</option>
                   <option value="opt2">Grey Level</option>
                   <option value="opt3">Pastel</option>
@@ -73,13 +75,36 @@
             <div class="menu-title">Re Add Items</div>
             <div class="content-selector">
               <label for="content-selector-sidebar-add">Add : </label>
-              <select class="sel" id="sidebar-add">
+              <select class="select" id="sidebar-add">
               </select>
+              <button class="btn-toolbox"  id="btn-delete">Add current choice</button>
+            </div>
+            <div class="menu-title" id="sidebar-table">Data</div>
+            <div class="button-group">
+              <label for="btn-table">Display / Hide table:</label>
+              <button class="btn-toolbox" id="btn-table">click</button>
+            </div>
+            <div class="menu-title" id="sidebar-table">Download</div>
+            <div class="button-group">
+              <label for="btn-download-svg">Download graphics :</label>
+              <button class="btn-toolbox" id="btn-download-svg">Download</button>
+            </div>
+            <div class="button-group">
+              <label for="btn-download-csv">Download data :</label>
+              <button class="btn-toolbox" id="btn-download-csv">Download</button>
             </div>
             
-            <div class="menu-title" id="sidebar-table">Data</div>
-            <button id="btn-table">click</button>
-          </div>
+          
+          <script type="module">
+            import * as e from "../js/event.mjs";
+        
+            document.getElementById("btn-download-svg").addEventListener("click", () => {
+              e.downloadToPNG();
+            });
+            document.getElementById("btn-download-csv").addEventListener("click", (e) => {
+              e.exportTableToCSV(e);
+            });
+          </script>
         </aside>
         
           
@@ -182,9 +207,9 @@ function toggleSidebar() {
 
         <script type="module" src="/src/js/Reader.mjs"></script>
         <script type="module" src="/src/js/Data.mjs"></script>
-        <script type="module" src="/src/js/Chart.mjs"></script>
- 
-        <script type="module" src="/src/js/event.mjs"></script>
+     
+
+        
     </div>
 </body>
 

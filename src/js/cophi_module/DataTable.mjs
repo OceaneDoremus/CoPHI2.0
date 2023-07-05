@@ -11,16 +11,15 @@ export class DataTable {
      * @param {*} columns 
      */
     reorder(columns) {
-      console.log('colonnes dans table : ' + columns)
         this.columns = columns;
-      
+
         const table = d3.select("#table-" + this.id);
       
         const headerRow = table.select("thead tr");
       
         headerRow
           .selectAll("th")
-          .data(this.columns, column => column)
+          .data(d => this.columns.map(column => column))
           .order() 
           .text(column => column);
       
@@ -58,11 +57,14 @@ export class DataTable {
           .text(d => d);
 
           const rows = tbody.selectAll("tr")
+
+
+          
             .data(count)
             .join("tr");
           
           rows.append("td")
-            .text(d => console.log(d));
+            .text(d => d);
           
         //   rows.selectAll("td.data-cell")
         //     .data(d => columns.map(key => d[columns] || 0))

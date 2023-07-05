@@ -30,10 +30,18 @@ export class Reader {
         .then((contents) => {
           if (contents.length === 1) {
             let inputData = d3.csvParse(contents[0]);
+            let columnsList = [];
+            inputData.forEach((element) => {
+              columnsList.push(element.columns);
+            });
+          
             let file = [];
-            file.push( new Data(inputData, "graph_0", []))
-            let G = new Graph(file);
-            G.initPCP();
+            let el =  new Data(inputData, "graph_0", []);
+            file.push(el.inputData);
+            console.log("les fichiers", file);
+             let G = new Graph(file);
+             console.log(G)
+             G.initPCP();
           } else if (contents.length <= 4) {
             this.compare(contents);
           } else {
@@ -65,7 +73,7 @@ export class Reader {
       files.push(el.inputData);
     }
     // CREATETHE MULTIGRAPH
-console.log("befor graph")
+
     let G = new Graph(files);
     G.initPCP();
   }

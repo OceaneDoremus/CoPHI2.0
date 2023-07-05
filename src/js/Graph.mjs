@@ -31,7 +31,6 @@ export class Graph {
     d3.selectAll('.checkbox-group')
       .on('click', (event, d) => {
         this.addObjet(d);
-        console.log("le d",d)
         plot.transition(this.container);
       });
   
@@ -40,17 +39,25 @@ export class Graph {
 
 
   addElementListener(plot, container) {
-    const elements = d3.select(`#sidebar-add`);
+    const select = d3.select(`#sidebar-add`);
+    const btn = d3.select('#btn-delete'); 
     const self = this;
-    
-    elements.on("change", function() {
-      const selectedOption = this.options[this.selectedIndex];
+    btn.on("click", function() {
+   
+      if(select.node().options.length >0) {
+      const selectedIndex = select.property("selectedIndex");
+      const selectedOption = select.node().options[selectedIndex];
       const selectedValue = selectedOption.value;
+  
       self.hiddenElement = self.hiddenElement.filter(el => el.name !== selectedValue);
-      plot.render(d3.select(this.options[this.selectedIndex]).datum(), container);
-      d3.select(selectedOption).remove();
+  
+      select.node().removeChild(selectedOption);
+      plot.render(d3.select(selectedOption).datum(), container);
+      }
     });
+  
   }
+  
   
   setNewHiddenElement() {
     const selection = d3.select('#sidebar-add');
@@ -125,10 +132,9 @@ getPathsColors(plot){
  * Start multi-graph creation
  */
   initPCP() {
-    console.log("init")
     let columns;
     if ( this.data.length === 1 ){
-      columns = this.data[0].inputData.columns.sort();
+      columns = this.data[0].columns.sort();
     }else {
    columns = this.data[0].columns;}
 

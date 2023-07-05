@@ -4,9 +4,10 @@
   var screenHeight = window.innerHeight;
   var gridSizeX = Math.floor(screenWidth / hexSize)+1;
   var gridSizeY = Math.floor(screenHeight / hexSize);
-
+console.log(gridSizeX);
   // Create hexagrid //
   var hexContainer = document.getElementById('hex-container');
+  console.log(document);
   for (var i = 0; i < gridSizeY; i++) {
     var row = document.createElement('div');
     row.className = 'row';
@@ -29,14 +30,14 @@ cursor.style.top = event.clientY + 'px';
 
 
 ///// Tools /////
-const menuIcon = document.getElementById("toolbox");
-  const sidebar = document.getElementById("menu-icon");
+// const menuIcon = document.getElementById("toolbox");
+//   const sidebar = document.getElementById("menu-icon");
 
-  menuIcon.addEventListener("click", toggleSidebar);
+//   menuIcon.addEventListener("click", toggleSidebar);
 
-  function toggleSidebar() {
-      sidebar.classList.toggle("sidebar-visible");
-  }
-  /// Show Table
+//   function toggleSidebar() {
+//       sidebar.classList.toggle("sidebar-visible");
+//   }
+//   /// Show Table
 
 

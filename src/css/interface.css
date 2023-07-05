@@ -32,7 +32,7 @@ li {
   position: absolute;
   right: -51px;
   border : none;
-  border-radius: 0 10px 10px 0; /* Coin supérieur droit et coin inférieur droit arrondis */
+  border-radius: 0 10px 10px 0; 
 }
 #toggleButton:hover{
   opacity: 0.8;
@@ -116,7 +116,7 @@ header {
   transition: transform 0.3s ease;
   padding-right: 250px;
   box-sizing: border-box;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.2);
   border-right: 3px solid #e63946;
   border-bottom: 3px solid #e63946;
   backdrop-filter: blur(2px);
@@ -130,7 +130,7 @@ header {
 #svg_container{
   background-color: rgb(245, 239, 239);
   border : 1px 0px 0 0 solid  rgb(219, 204, 204);
-  margin-top: -100px;
+  margin-top: -10px;
   overflow-x: scroll;
 }
 
@@ -175,7 +175,7 @@ header {
 }
 
 
-.sel {
+.select {
   color: black;
   border: 1px solid #ccc;
   padding: 5px 20px;
@@ -190,25 +190,32 @@ header {
 }
 
 
-#btn-table {
+.btn-toolbox {
   
     margin-top: 5%;
     margin-bottom: 10px;
-    margin-left: 50px;
     color: white;
     background-color: #505D75;
-    font-size: 25px;
-    border-radius: 40px;
-    width: 150px;
+    font-size: 15px;
+    border-radius: 5px;
+    width: auto;
     border-style: none;
-    height: 40px;
-    opacity: 1;
+    height: auto;
+
+}
+.button-group {
+width: 300px;
+  margin-bottom: 10px;
 }
 
-#btn-table:hover {
-  background: #9f8cfe;
-  width: 130px;
+label {
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  width: fit-content;
+display: inline-block;
+}
 
+.btn-toolbox:hover {
+  background: #9cb5e4;
 }
 
 .dropdown-menu {
@@ -382,14 +389,14 @@ td {
 }
 #footer {
   overflow: hidden;
-  max-height: 50px; /* Hauteur initiale du bas de page */
-  transition: max-height 0.5s ease; /* Animation de transition */
+  max-height: 50px; 
+  transition: max-height 0.5s ease; 
 }
 
 #hiddenContent {
-  display: none; /* Cacher la partie supplémentaire du bas de page */
+  display: none; 
 }
 
 .expanded {
-  max-height: 200px; /* Hauteur totale du bas de page lorsqu'il est déployé */
+  max-height: 200px; 
 }

@@ -25,10 +25,10 @@ export function getPaths (s) {
     return d3.select(p).attr('graphPosition') === s;
   });
 
-  const filteredNodes = selection.nodes().filter(function(node) {
+   const filteredNodes = selection.nodes() // .filter(function(node) {
  
-  return d3.select(node).attr('graphPosition') === s;
-  });
+  // return d3.select(node).attr('graphPosition') === s;
+  // });
   
   return filteredNodes;
 }
@@ -36,6 +36,8 @@ export function getPaths (s) {
 export function currentElement (selection,name) {
   console.log(selection,name)
   const paths = getPaths(selection)
+ 
+  paths.filter(path => path.getAttribute('id') === name)
   return paths.filter(path => path.getAttribute('id') === name)
 }
 

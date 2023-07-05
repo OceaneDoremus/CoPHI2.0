@@ -1,9 +1,11 @@
-import { Chart } from "./Chart.mjs";
+
 export class Data {
     constructor(inputData , container,columns) {
+      console.log("data class")
         this.inputData = inputData;
         this.container=container;
         this.columns=columns;
+        console.log(this.inputData,this.columns);
         this.initData(this.inputData);
     } 
 
@@ -73,10 +75,10 @@ return result;  }
     initData(inputData) {
 
         this.traiterParLot(inputData, 1000);
-       let newData =  this.addNullReaction(inputData,this.columns);
+        let newData =  this.addNullReaction(inputData,this.columns);
         let d = this.sortColumns(newData);
         let lines = d;
         let keys = d.columns
-       //let chart = new Chart(this.container,d.data, lines, keys);
+       
     }
 }

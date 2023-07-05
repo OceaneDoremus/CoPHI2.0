@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "name": "pack",
+  "name": "cophi",
   "version": "1.0.0",
   "description": "Un première implémentation de la nouvelle version de CoPHI (https://www.labri.fr/perso/jsansen/CoPHI.html) initialement créée par Joris Sansen en 2017.  Cophi est un outil de visualisation de réseaux métaboliques interactif qui permet de visualiser plusieurs réseaux sous forme de graphiques de Sankey en simultané.",
   "main": "test.js",
@@ -28,6 +28,7 @@
     "file-saver": "^2.0.5",
     "filesaver": "^0.0.13",
     "http": "^0.0.1-security",
+    "mime": "^3.0.0",
     "path": "^0.12.7",
     "save-svg-as-png": "^1.4.17"
   },
