@@ -22,7 +22,7 @@ app.use('/src/js', (req, res, next) => {
 }, express.static(path.join(__dirname, '/src/js')));
 
 app.get('/', (req, res) => {
-  const indexPath = path.join(__dirname+'/index.html');
+  const indexPath = path.join(__dirname+'/interface.html');
   res.sendFile(indexPath);
 });
 

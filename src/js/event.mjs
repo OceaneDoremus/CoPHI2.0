@@ -1,4 +1,9 @@
 
+/** @author Océane Dorémus
+ * source(s) : 
+ * https://stackoverflow.com/questions/3975499/convert-svg-to-image-jpeg-png-etc-in-the-browser
+ * https://stackoverflow.com/questions/15547198/export-html-table-to-csv-using-vanilla-javascript
+ */
 export function downloadToPNG() {
   const svgElement = document.getElementById('svg_container');
   if(!svgElement){return}

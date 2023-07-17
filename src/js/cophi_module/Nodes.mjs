@@ -1,4 +1,7 @@
 
+
+/** @author Océane Dorémus
+ */
 export class Node {
     constructor(name, data, parentAxe,graphPosition) {
         this.name = name;

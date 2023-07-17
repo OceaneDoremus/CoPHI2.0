@@ -1,3 +1,10 @@
+
+/** @author Océane Dorémus
+ * source(s):
+ * http://using-d3js.com/02_04_reordering_elements.html
+ * https://bost.ocks.org/mike/chart/
+ * https://observablehq.com/@john-guerra/reusable-chart-pattern
+ */
 import { Plot } from "./cophi_module/cophi.mjs";
 
 export class Graph {

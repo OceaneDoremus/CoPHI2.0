@@ -1,3 +1,13 @@
+
+/** @author Océane Dorémus
+ * source(s) : 
+ * https://d3-graph-gallery.com/graph/interactivity_button.html
+ * https://github.com/jasondavies/d3-parsets
+ * https://github.com/d3/d3-sankey
+ */
+
+
+
 import { Axe } from "./Axe.mjs";
 import { Node } from "./Nodes.mjs";
 import { DataTable } from "./DataTable.mjs";

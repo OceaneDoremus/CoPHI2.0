@@ -1,3 +1,6 @@
+
+/** @author Océane Dorémus
+ */
 export class Axe {
   constructor(name, position) {
     this.name = name;

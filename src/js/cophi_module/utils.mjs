@@ -1,3 +1,9 @@
+
+/** @author Océane Dorémus
+ * source(s) : 
+ * https://d3-graph-gallery.com/graph/interactivity_tooltip.html
+ */
+
 export function createTooltip(event, info) {
 
   const tooltip = d3

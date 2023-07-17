@@ -1,3 +1,10 @@
+/** @author Océane Dorémus
+ * source(s) : 
+ * https://observablehq.com/@ykumanekoy/make-a-table-by-d3-js
+
+ */
+
+
 export class DataTable {
   constructor(data, columns, id) {
     this.id = id;

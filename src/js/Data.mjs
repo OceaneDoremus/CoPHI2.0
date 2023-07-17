@@ -1,10 +1,13 @@
+
+
+/** @author Océane Dorémus
+ */
+
 export class Data {
   constructor(inputData, container, columns) {
     this.inputData = inputData;
     this.container = container;
     this.columns = columns;
-    this.originalData = this.inputData;
-    console.log("ori",this.originalData);
     this.initData(this.inputData);
   }
 

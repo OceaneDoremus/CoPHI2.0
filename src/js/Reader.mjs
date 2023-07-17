@@ -1,3 +1,8 @@
+/** @author Océane Dorémus
+ * source(s) : 
+ * https://www.aleksandrhovhannisyan.com/blog/javascript-promise-all/
+ */
+
 import { Data } from "./Data.mjs"
 import { Graph } from "./Graph.mjs"
 export class Reader {
@@ -74,7 +79,6 @@ export class Reader {
     }
     // Create the multi-graph
     let G = new Graph(files);
-    console.log(G)
     G.initPCP();
   }
   

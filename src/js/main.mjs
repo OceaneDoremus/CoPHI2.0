@@ -34,6 +34,5 @@ function getFiles() {
     return; 
   }
   startVisualization();
-  console.log(files)
   const reader = new Reader(files);
 }
