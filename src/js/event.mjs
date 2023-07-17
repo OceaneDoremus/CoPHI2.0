@@ -2,7 +2,7 @@
 export function downloadToPNG() {
   const svgElement = document.getElementById('svg_container');
   if(!svgElement){return}
-  const svgRect = svgElement.getBoundingClientRect(); // Obtenir les dimensions de l'élément SVG
+  const svgRect = svgElement.getBoundingClientRect(); 
   
   const svgWidth = svgRect.width;
   const svgHeight = svgRect.height;
@@ -14,8 +14,7 @@ export function downloadToPNG() {
   const svgString = new XMLSerializer().serializeToString(svgElement);
   const image = new Image();
   image.onload = function() {
-    context.drawImage(image, 0, 0, svgWidth, svgHeight); // Utiliser les dimensions réelles
-
+    context.drawImage(image, 0, 0, svgWidth, svgHeight); 
     canvas.toBlob(function(blob) {
       saveAs(blob, 'graph.png');
     });
@@ -26,7 +25,9 @@ export function exportTableToCSV(e) {
   e.preventDefault();
 
   var tableElements = document.querySelectorAll('[id^="table-"]');
-  if(!tableElements){return}
+  if (!tableElements) {
+    return;
+  }
   var csvFiles = [];
 
   tableElements.forEach((table, index) => {
@@ -40,6 +41,7 @@ export function exportTableToCSV(e) {
         var eleClone = ele.cloneNode(true);
         eleClone.innerText = eleClone.innerText.replace(/\"/gi, '\"\"');
         eleClone.innerText = '"' + eleClone.innerText + '"';
+        eleClone.innerText = eleClone.innerText.replace(/2/g, '-1');
         row.push(eleClone.innerText);
       });
       rows.push(row.join(","));
@@ -61,3 +63,4 @@ export function exportTableToCSV(e) {
     document.body.removeChild(dlAnchor);
   });
 }
+

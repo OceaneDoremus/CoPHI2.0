@@ -8,18 +8,16 @@ export class Node {
         this.parentAxe = parentAxe.toString();
         this.children = [];
         this.count;
-        this.svgheight = 300;
         this.links = [];
-        this.height = 28; // correspond a la taille du rect, min à 2
-        this.position; // correspond au x
+        this.height = 10; 
+        this.position; // x
         this.yPos = []; // ytop and ybottom for the links
         this.total;
         this.percentage;
     }
 
     graphPadding() {
-        console.log(400*this.graphPosition);
-        return 200*this.graphPosition;
+        return 300*this.graphPosition;
     }
 
 
@@ -37,7 +35,7 @@ export class Node {
     }
 
     computePosition(height, category) {
-        let svgHeight = 400;//(category + 1) * 400 + this.graphPadding; // Hauteur du block pour chaque fichier
+        let svgHeight = 400;
         let max = svgHeight / 3;
         let padding = 5;
         let nodesize = max - padding;
@@ -50,17 +48,14 @@ export class Node {
           if (height < nodesize) {
             return padding + nodesize - height +this.graphPadding;
           } else {
-            return 0 //+ this.graphPadding * 3;
+            return 0 
           }
         }
-      
         return 0;
       }
       
-    
-
     setHeightAndPosition(x, total) {
-        this.height = ( this.count / total)*100; //taille en pourcentage
+        this.height = ( this.count / total)*100; 
         this.position = x(this.parentAxe);
         this.yPos = [this.computePosition(this.height, this.value), this.computePosition(this.height, this.value) + this.height];
         this.total = total;

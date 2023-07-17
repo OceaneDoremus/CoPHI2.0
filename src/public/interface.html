@@ -25,18 +25,12 @@
 
 <header>
     <div class="navbar-links-container">
-      <button class="navbar-links" id="home-page" onclick="redirectToHomePage()">Home</button>
-      <button class="navbar-links" id="help-page" onclick="alert('insert help page here');">Help</button>
+      <button class="navbar-links" id="help-page" onclick="alert('Drag to move the axis, click on the checkboxes below each axis to delete, or use the toolbox.');">Help</button>
     </div>
     <div class="title">C.O.Ph.I</div>
   </header>
   
 
-<script>
-    function redirectToHomePage() {
-        window.location.href = "index.html";
-    }
-</script>
 
 
 <body>
@@ -101,8 +95,8 @@
             document.getElementById("btn-download-svg").addEventListener("click", () => {
               e.downloadToPNG();
             });
-            document.getElementById("btn-download-csv").addEventListener("click", (e) => {
-              e.exportTableToCSV(e);
+            document.getElementById("btn-download-csv").addEventListener("click", (d) => {
+              e.exportTableToCSV(d);
             });
           </script>
         </aside>

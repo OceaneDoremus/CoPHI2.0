@@ -8,7 +8,6 @@ export class Reader {
     }
 
     uploadData() {
-      console.log("[-- START READING FILES --]");
       const files = Array.from(this.inputData); 
     
       const promises = files.map((file) => {
@@ -17,7 +16,6 @@ export class Reader {
           reader.readAsText(file);
           reader.onload = function (e) {
             const content = e.target.result;
-            console.log("[-- FILE LOADED --]");
             resolve(content); 
           };
           reader.onerror = function (e) {
@@ -30,6 +28,9 @@ export class Reader {
         .then((contents) => {
           if (contents.length === 1) {
             let inputData = d3.csvParse(contents[0]);
+            console.log("inpu",inputData)
+         
+       
             let columnsList = [];
             inputData.forEach((element) => {
               columnsList.push(element.columns);
@@ -38,18 +39,17 @@ export class Reader {
             let file = [];
             let el =  new Data(inputData, "graph_0", []);
             file.push(el.inputData);
-            console.log("les fichiers", file);
              let G = new Graph(file);
-             console.log(G)
+             
              G.initPCP();
-          } else if (contents.length <= 4) {
+          } else if (contents.length <= 8) {
             this.compare(contents);
           } else {
-            console.error("Only 1 to 4 files are supported.");
+            console.error("Only 1 to 8 files are supported");
           }
         })
         .catch((error) => {
-          console.error("Erreur de lecture des fichiers:", error);
+          console.error("Error : ", error);
         });
     }
 
@@ -72,9 +72,9 @@ export class Reader {
       let el = new Data(parsedData[i], `graph_${i}`, extraColumns);
       files.push(el.inputData);
     }
-    // CREATETHE MULTIGRAPH
-
+    // Create the multi-graph
     let G = new Graph(files);
+    console.log(G)
     G.initPCP();
   }
   

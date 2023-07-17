@@ -1,18 +1,17 @@
 export class Axe {
-  constructor (name, position) {
-    this.name = name
-    this.nodes = []
-    this.countNodes = 0
-    this.position = position
+  constructor(name, position) {
+    this.name = name;
+    this.nodes = [];
+    this.countNodes = 0;
+    this.position = position;
   }
-  setCount(count){
-    this.countNodes =  count;
+  setCount(count) {
+    this.countNodes = count;
   }
 
-  addNodes (nodes) {
-    this.nodes.push(nodes)
-    // console.log(nodes)
+  addNodes(nodes) {
+    this.nodes.push(nodes);
     this.setCount(1);
-   this.countNodes++
+    this.countNodes++;
   }
 }

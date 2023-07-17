@@ -1,18 +1,18 @@
-import { Reader } from "./Reader.mjs"
+import { Reader } from "./Reader.mjs";
+
+// function used to start the visualization processing
 export function main() {
-  console.log("hello world");
   getFiles();
-
 }
-/// UTILS ////
+// function used to hide a DOM element
 function hide(el) {
-  el.style("display", "none");
+el.style("display", "none");
 }
-
+// function used to show a DOM element
 function show(el) {
   el.style("display", "block");
 }
-
+// function used to check if a DOM element is visible or not
 function isVisible(el) {
   const isVisible = el.style("display") !== "none";
   if (isVisible) {
@@ -21,22 +21,19 @@ function isVisible(el) {
     show(el);
   }
 }
-
+// function used to hide card element containing the file(s)
 function startVisualization() {
-  // Hide Start Element
   const el = d3.select(".card");
   isVisible(el);
-
 }
-
+// function used to get the files from the input
 function getFiles() {
-  const files = document.getElementById('files').files;
+  const files = document.getElementById("files").files;
   if (files.length === 0) {
-    alert("Aucun fichier sélectionné !");
-    return; // Sortir de la fonction pour éviter la création de l'instance Reader
+    alert("No file(s) selected !");
+    return; 
   }
   startVisualization();
-  const read = new Reader(files);
- 
+  console.log(files)
+  const reader = new Reader(files);
 }
-

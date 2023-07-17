@@ -29,15 +29,4 @@ cursor.style.top = event.clientY + 'px';
 });
 
 
-///// Tools /////
-// const menuIcon = document.getElementById("toolbox");
-//   const sidebar = document.getElementById("menu-icon");
-
-//   menuIcon.addEventListener("click", toggleSidebar);
-
-//   function toggleSidebar() {
-//       sidebar.classList.toggle("sidebar-visible");
-//   }
-//   /// Show Table
-
 
